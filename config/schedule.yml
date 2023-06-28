@@ -1,0 +1,28 @@
+default: &default
+  articles_publish_at_scheduler_worker:
+    cron: "0 * * * *"
+    class: "ArticlesPublishAtSchedulerWorker"
+    queue: "default"
+  articles_unpublish_at_scheduler_worker:
+    cron: "0 * * * *"
+    class: "ArticlesUnpublishAtSchedulerWorker"
+    queue: "default"
+
+development:
+  articles_publish_at_scheduler_worker:
+    cron: "* * * * *"
+    class: "ArticlesPublishAtSchedulerWorker"
+    queue: "default"
+  articles_unpublish_at_scheduler_worker:
+    cron: "* * * * *"
+    class: "ArticlesUnpublishAtSchedulerWorker"
+    queue: "default"
+
+test:
+  <<: *default
+
+staging:
+  <<: *default
+
+production:
+  <<: *default

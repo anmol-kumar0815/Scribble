@@ -1,0 +1,57 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
+# To learn more, please read the Rails Internationalization guide
+# available at https://guides.rubyonrails.org/i18n.html.
+
+en:
+  successfully_created: "%{entity} was created successfully"
+  successfully_deleted: "%{entity} was deleted successfully"
+  successfully_updated: "%{entity} was updated successfully"
+  successfully_moved: "%{entity} was moved successfully"
+  position_successfully_updated: "%{entity} position was successfully updated"
+  already_exists: "%{entity} is already exists"
+  not_found: "%{entity} not found."
+  article:
+    slug:
+      immutable: "is immutable!"
+    invalid_unpublish_datetime: "unpublish schedule date and time must be later than the publish schedule date and time."
+    invalid_publish_datetime: "publish schedule date and time must be later than the unpublish schedule date and time."
+    invalid_schedule_time: "schedule time cannot be in past."
+    schedule_time_cannot_be_same: "publish and unpublish schedule time cannot be the same."
+    invalid_schedule: "current status and schedule status cannot be the same"
+  organization:
+    invalid_password: "Password is incorrect"
+    access_denied: "Access denied"
+  redirection:
+    same_path: "From and To path cannot be same."
+    cycle: "will make a cycle."
+  report:
+    render: "Rendering the report"
+    generate: "Generating the PDF report"
+    generated: "Generated the PDF report"
