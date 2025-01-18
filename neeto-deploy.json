@@ -1,0 +1,74 @@
+{
+  "name": "scribble",
+  "scripts": {},
+  "stack": "heroku-22",
+  "env": {
+    "RESET_DATABASE_WITH_SAMPLE_DATA": {
+      "required": false,
+      "value": "false"
+    },
+    "SECRET_KEY_BASE": {
+      "required": false,
+      "value": "0e649990875d727097d4df6a82ccc6cff7a2d8b49e1eb6697a2a36134d58969d74328edc018747e28a4bf73c077687c15783dfed7d45e76ed60ce83b0ce97b27"
+    },
+    "RACK_ENV": {
+      "value": "heroku"
+    },
+    "PORT": {
+      "value": 3000
+    },
+    "RAILS_ENV": {
+      "value": "heroku"
+    },
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
+    "LOG_LEVEL": {
+      "value": "DEBUG"
+    },
+    "YARN_PRODUCTION": {
+      "value": "true"
+    },
+    "NODE_MODULES_CACHE": {
+      "value": "true"
+    },
+    "DISABLE_RACK_ATTACK": {
+      "value": "true"
+    },
+    "CLIENT_AUTHENTICATION_TOKEN": {
+      "value": "mysecrettoken123%&^@"
+    },
+    "ENCRYPTION_PRIMARY_KEY": {
+      "value": "APqKn1qJmwNXgDcHnXTOaFIhtYhnP3LN"
+    },
+    "ENCRYPTION_DETERMINISTIC_KEY": {
+      "value": "0VVpOKlunO4QtsHhieXJfdXZ6GXeIam9"
+    },
+    "ENCRYPTION_DERIVATION_SALT_KEY": {
+      "value": "BjUcTV17hJNy7bzN19q467nnF3ZtW0kJ"
+    }
+  },
+  "formation": {},
+  "addons": [
+    {
+      "plan": "neetodeploy-postgresql:basic",
+      "options": {
+        "version": "14"
+      }
+    },
+    {
+      "plan": "neetodeploy-redis:basic",
+      "options": {
+        "version": "6"
+      }
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "neeto-deploy/nodejs"
+    },
+    {
+      "url": "heroku/ruby"
+    }
+  ]
+}
