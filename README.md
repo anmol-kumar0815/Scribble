@@ -1,24 +1,51 @@
-# README
+## Setup Instructions
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### 1. Install Ruby
+```bash
+rbenv install 3.1.3
+```
 
-Things you may want to cover:
+### 2. Install Ruby Dependencies
+```bash
+bundle install
+```
 
-* Ruby version
+### 3. Install Node & Frontend Dependencies
+```bash
+nvm install
+yarn install
+```
 
-* System dependencies
+### 4. Run Setup Script
+```bash
+./bin/setup
+```
 
-* Configuration
+## Running the Application (Development Environment)
+You need to run the following three processes in parallel.
+### 1. Start Rails Server
+```bash
+bundle exec rails s
+```
 
-* Database creation
+### 2. Start Webpack Dev Server (React)
+```bash
+./bin/webpack-dev-server
+```
 
-* Database initialization
+### 3. Start Sidekiq
+```bash
+bundle exec sidekiq
+```
 
-* How to run the test suite
+Once all services are running, visit:
+http://localhost:3000
 
-* Services (job queues, cache servers, search engines, etc.)
+## Running Tests
+```bash
+bundle exec rails test
+```
 
-* Deployment instructions
-
-* ...
+## Notes
+- Ensure Redis is running before starting Sidekiq.
+- Restart webpack-dev-server if frontend changes are not reflected.
