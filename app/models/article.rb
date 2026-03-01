@@ -29,16 +29,6 @@ class Article < ApplicationRecord
   before_create :set_slug, if: -> { status == "Published" }
   before_update :set_slug, if: -> { slug.nil? && status == "Published" }
 
-  def search_data
-    {
-      title:,
-      body:,
-      user_id:,
-      category_id:,
-      status:,
-      updated_at:
-    }
-  end
 
   private
 

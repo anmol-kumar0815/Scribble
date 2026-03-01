@@ -218,10 +218,4 @@ class ArticleTest < ActiveSupport::TestCase
     assert @article.valid?
   end
 
-  def test_search_data_includes_title_and_body
-    search_payload = @article.search_data
-
-    assert_equal @article.title, search_payload[:title]
-    assert_equal @article.body, search_payload[:body]
-  end
 end
