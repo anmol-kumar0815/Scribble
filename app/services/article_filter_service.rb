@@ -13,6 +13,11 @@ class ArticleFilterService
     filters[:category_id] = selected_category_ids if selected_category_ids.present?
     filters[:status] = selected_status if selected_status.present? && selected_status != "All"
 
-    Article.search(searched_term.presence || "*", where: filters, order: { updated_at: :desc })
+    Article.search(
+      searched_term.presence || "*",
+      fields: %i[title body],
+      where: filters,
+      order: { updated_at: :desc }
+    )
   end
 end

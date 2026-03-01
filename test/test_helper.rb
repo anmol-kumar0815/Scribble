@@ -21,6 +21,9 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 
+Article.reindex
+Searchkick.disable_callbacks
+
 class ActiveSupport::TestCase
   include ActionView::Helpers::TranslationHelper
   include FactoryBot::Syntax::Methods

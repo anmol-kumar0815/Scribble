@@ -217,4 +217,5 @@ class ArticleTest < ActiveSupport::TestCase
     @article.unpublish_at = Time.zone.now + 2.hour
     assert @article.valid?
   end
+
 end
