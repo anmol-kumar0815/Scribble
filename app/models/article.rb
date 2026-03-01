@@ -25,7 +25,6 @@ class Article < ApplicationRecord
   has_paper_trail on: %i[create update], only: %i[title category_id body status]
   max_paginates_per MAX_PAGINATION_PER_PAGE
 
-  after_commit :reindex, on: :create
 
   before_create :set_slug, if: -> { status == "Published" }
   before_update :set_slug, if: -> { slug.nil? && status == "Published" }

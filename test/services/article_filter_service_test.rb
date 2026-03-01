@@ -4,69 +4,148 @@ require "test_helper"
 
 class ArticleFilterServiceTest < ActiveSupport::TestCase
   def setup
+    Searchkick.enable_callbacks
+
     @user = create(:user)
-    @selected_category_ids = [1, 2]
-    @searched_term = "  ruby on rails  "
+    @other_user = create(:user)
+    @selected_category = create(:category, user: @user)
+    @other_category = create(:category, user: @user)
   end
 
-  def test_process_builds_filters_with_all_options
-    expected_results = [build(:article)]
+  def teardown
+    Searchkick.disable_callbacks
+  end
 
-    Article.expects(:search).with(
-      "ruby on rails",
-      fields: %i[title body],
-      where: {
-        user_id: @user.id,
-        category_id: @selected_category_ids,
-        status: "Published"
-      },
-      order: { updated_at: :desc }
-    ).returns(expected_results)
+  def test_search_finds_article_by_title
+    matching_article = create(
+      :article,
+      user: @user,
+      category: @selected_category,
+      title: "Ruby Testing Guide",
+      body: "Completely unrelated body"
+    )
+    create(
+      :article,
+      user: @user,
+      category: @selected_category,
+      title: "JavaScript Tips",
+      body: "Also unrelated"
+    )
 
-    result = ArticleFilterService.new(
+    Article.search_index.refresh
+
+    filtered_articles = ArticleFilterService.new(@user.id, [], "All", "ruby").process.to_a
+
+    assert_equal [matching_article.id], filtered_articles.map(&:id)
+  end
+
+  def test_search_finds_article_by_body
+    matching_article = create(
+      :article,
+      user: @user,
+      category: @selected_category,
+      title: "Unrelated title",
+      body: "This article explains OpenSearch analyzers"
+    )
+    create(
+      :article,
+      user: @user,
+      category: @selected_category,
+      title: "Another title",
+      body: "No matching content here"
+    )
+
+    Article.search_index.refresh
+
+    filtered_articles = ArticleFilterService.new(@user.id, [], "All", "analyzers").process.to_a
+
+    assert_equal [matching_article.id], filtered_articles.map(&:id)
+  end
+
+  def test_search_respects_category_and_status_filters
+    matching_article = create(
+      :article,
+      user: @user,
+      category: @selected_category,
+      status: "Published",
+      title: "Filter test title",
+      body: "Filter test body"
+    )
+    create(
+      :article,
+      user: @user,
+      category: @other_category,
+      status: "Published",
+      title: "Filter test title",
+      body: "Filter test body"
+    )
+    create(
+      :article,
+      user: @user,
+      category: @selected_category,
+      status: "Draft",
+      title: "Filter test title",
+      body: "Filter test body"
+    )
+
+    Article.search_index.refresh
+
+    filtered_articles = ArticleFilterService.new(
       @user.id,
-      @selected_category_ids,
+      [@selected_category.id],
       "Published",
-      @searched_term
-    ).process
+      "filter"
+    ).process.to_a
 
-    assert_equal expected_results, result
+    assert_equal [matching_article.id], filtered_articles.map(&:id)
   end
 
-  def test_process_uses_wildcard_when_search_term_blank
-    expected_results = []
+  def test_search_limits_results_to_given_user
+    create(
+      :article,
+      user: @other_user,
+      category: create(:category, user: @other_user),
+      title: "Ruby Secrets",
+      body: "Should not be visible to another user"
+    )
+    matching_article = create(
+      :article,
+      user: @user,
+      category: @selected_category,
+      title: "Ruby Secrets",
+      body: "Visible for current user"
+    )
 
-    Article.expects(:search).with(
-      "*",
-      fields: %i[title body],
-      where: { user_id: @user.id },
-      order: { updated_at: :desc }
-    ).returns(expected_results)
+    Article.search_index.refresh
 
-    result = ArticleFilterService.new(@user.id, [], "All", "   ").process
+    filtered_articles = ArticleFilterService.new(@user.id, [], "All", "ruby").process.to_a
 
-    assert_equal expected_results, result
+    assert_equal [matching_article.id], filtered_articles.map(&:id)
   end
 
-  def test_process_does_not_include_status_filter_when_all_is_selected
-    Article.expects(:search).with(
-      "hello",
-      fields: %i[title body],
-      where: { user_id: @user.id, category_id: @selected_category_ids },
-      order: { updated_at: :desc }
-    ).returns([])
+  def test_blank_search_term_returns_all_articles_for_user_with_filters
+    matching_published_article = create(
+      :article,
+      user: @user,
+      category: @selected_category,
+      status: "Published"
+    )
+    create(
+      :article,
+      user: @user,
+      category: @selected_category,
+      status: "Draft"
+    )
 
-    ArticleFilterService.new(@user.id, @selected_category_ids, "All", "hello").process
-  end
+    Article.search_index.refresh
 
-  def test_process_does_not_include_category_filter_when_no_categories_selected
-    Article.expects(:search).with(
-      "hello",
-      fields: %i[title body],
-      where: { user_id: @user.id, status: "Draft" },
-      order: { updated_at: :desc }
-    ).returns([])
+    filtered_articles = ArticleFilterService.new(
+      @user.id,
+      [@selected_category.id],
+      "Published",
+      "   "
+    ).process.to_a
 
-    ArticleFilterService.new(@user.id, nil, "Draft", "hello").process
+    assert_equal [matching_published_article.id], filtered_articles.map(&:id)
   end
 end

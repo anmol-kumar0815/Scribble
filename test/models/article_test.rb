@@ -218,14 +218,6 @@ class ArticleTest < ActiveSupport::TestCase
     assert @article.valid?
   end
 
-  def test_article_registers_reindex_after_commit_on_create
-    reindex_create_callback = Article._commit_callbacks.any? do |callback|
-      callback.kind == :after && callback.filter == :reindex && callback.options[:on] == :create
-    end
-
-    assert reindex_create_callback
-  end
-
   def test_search_data_includes_title_and_body
     search_payload = @article.search_data
 
