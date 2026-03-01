@@ -5,6 +5,8 @@ class Article < ApplicationRecord
   MAX_PAGINATION_PER_PAGE = 10
   MAX_PAGINATION_ARTICLES_TABLE = 7
 
+  searchkick
+
   acts_as_list scope: :category
 
   belongs_to :category

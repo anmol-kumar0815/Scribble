@@ -5,10 +5,12 @@ class Api::Admin::ArticlesController < ApplicationController
 
   def index
     @articles = ArticleFilterService.new(
-      current_user.articles, params[:selected_category_ids], params[:selected_status],
-      params[:searched_title]).process
+      current_user.id,
+      params[:selected_category_ids],
+      params[:selected_status],
+      params[:searched_title]
+                ).process
     @count = @articles.count
-    @articles = @articles.page(params[:page]).per(Article::MAX_PAGINATION_ARTICLES_TABLE)
     render
   end
 
