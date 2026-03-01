@@ -14,6 +14,7 @@ class ArticleFilterServiceTest < ActiveSupport::TestCase
 
     Article.expects(:search).with(
       "ruby on rails",
+      fields: %i[title body],
       where: {
         user_id: @user.id,
         category_id: @selected_category_ids,
@@ -37,6 +38,7 @@ class ArticleFilterServiceTest < ActiveSupport::TestCase
 
     Article.expects(:search).with(
       "*",
+      fields: %i[title body],
       where: { user_id: @user.id },
       order: { updated_at: :desc }
     ).returns(expected_results)
@@ -49,6 +51,7 @@ class ArticleFilterServiceTest < ActiveSupport::TestCase
   def test_process_does_not_include_status_filter_when_all_is_selected
     Article.expects(:search).with(
       "hello",
+      fields: %i[title body],
       where: { user_id: @user.id, category_id: @selected_category_ids },
       order: { updated_at: :desc }
     ).returns([])
@@ -59,6 +62,7 @@ class ArticleFilterServiceTest < ActiveSupport::TestCase
   def test_process_does_not_include_category_filter_when_no_categories_selected
     Article.expects(:search).with(
       "hello",
+      fields: %i[title body],
       where: { user_id: @user.id, status: "Draft" },
       order: { updated_at: :desc }
     ).returns([])
