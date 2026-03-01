@@ -32,6 +32,10 @@ gem "net-imap", require: false
 gem "net-pop", require: false
 gem "net-smtp", require: false
 
+# For advanced search
+gem "opensearch-ruby"
+gem "searchkick"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]

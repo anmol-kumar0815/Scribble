@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class Article < ApplicationRecord
-  MAX_TITLE_LENGTH = 50
+  MAX_TITLE_LENGTH = 150
   MAX_PAGINATION_PER_PAGE = 10
   MAX_PAGINATION_ARTICLES_TABLE = 7
+
+  searchkick
 
   acts_as_list scope: :category
 
